@@ -16,18 +16,24 @@ import java.util.ArrayList;
 import java.util.List;
 public class Answerretrieval {
 
+	
+	/**
+	 * get all property of an entity
+	 * @param key
+	 * @return
+	 */
 	public static ArrayList<String> getAllProperty(String key) {
 		// TODO Auto-generated method stub
 		Model m = ModelFactory.createDefaultModel();
         // use the file manager to read an RDF document into the model
-        FileManager.get().readModel(m, "sample_instances.owl");
+        FileManager.get().readModel(m, "/Users/Lu/Desktop/544_project/sample_instances.owl");
         String sparqlQueryString = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
 				"PREFIX ckb: <http://cbk.org#>\n"+
 				"PREFIX ont: <http://ckb.org/ontology/#>\n"+
 				"SELECT ?people ?properties ?value\n"+
 				"WHERE\n"+
 //				"{?people rdfs:label \"劳尔·内托\". "+
-				"{?people rdfs:label" + key + ". "+
+				"{?people rdfs:label \"" + key + "\". "+
 				"?people ?properties ?value }" ;
         Query query = QueryFactory.create(sparqlQueryString) ;
         QueryExecution qexec = QueryExecutionFactory.create(query,m) ;
@@ -43,9 +49,9 @@ public class Answerretrieval {
             }
         }
 //      print all the property
-        for (int i = 0;i<list.size();i++){
-	    	System.out.println(list.get(i));
-	    }
+//        for (int i = 0;i<list.size();i++){
+//	    	System.out.println(list.get(i));
+//	    }
         return list;
 	}
 	
@@ -54,16 +60,20 @@ public class Answerretrieval {
 		return "None";
 	}
 	
+	/**
+	 * retrieve the answer
+	 * @param key
+	 * @param Prpty
+	 */
 	public static void queryAnswer(String key,String Prpty){
 		Model m = ModelFactory.createDefaultModel();
         // use the file manager to read an RDF document into the model
-        FileManager.get().readModel(m, "all_instances.owl");
+        FileManager.get().readModel(m, "/Users/Lu/Desktop/544_project/sample_instances.owl");
         String sparqlQueryString = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
 				"PREFIX ckb: <http://cbk.org#>\n"+
 				"PREFIX ont: <http://ckb.org/ontology/#>\n"+
 				"SELECT ?people ?properties ?value\n"+
 				"WHERE\n"+
-//				"{?people rdfs:label \"劳尔·内托\". "+
 				"{?people rdfs:label ?x . "+
 				"?people ont:" + Prpty + "?value " +
 				"FILTER regex(?x,\"" + key + "\")}";
@@ -71,7 +81,9 @@ public class Answerretrieval {
         QueryExecution qexec = QueryExecutionFactory.create(query,m) ;
         ResultSet results = qexec.execSelect() ;
         for (;results.hasNext();) {
+        	System.out.println("count");
             QuerySolution soln = results.nextSolution();
+            System.out.println(soln.toString());
             RDFNode x = soln.get("value");
             System.out.println(x);
         }
@@ -79,11 +91,13 @@ public class Answerretrieval {
 	
 	public static void main(String[] args){
 		ArrayList<String> propertyList = new ArrayList<String>();
-		propertyList = getAllProperty("\"劳尔·内托\"") ;
-		for (String temp : propertyList){
-			System.out.println(temp);
-		}
-		queryAnswer("\"劳尔·内托\"",propertyList.get(0));
+//		propertyList = getAllProperty("\"劳尔·内托\"") ;
+//		for (String temp : propertyList){
+//			System.out.println(temp);
+//		}
+		//queryAnswer("\"劳尔·内托\"",propertyList.get(0));
+		queryAnswer("科比·布莱恩特","职业");
+//		getAllProperty("科比·布莱恩特");
 	}
 
 }
