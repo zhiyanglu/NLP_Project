@@ -67,7 +67,7 @@ public class questionparsing {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String content = "姚明有多高";
+		String content = "北京在哪里";
 		getQuery(content);
 		System.out.println(getSimpleQuery(content));
 //		System.out.println(keyWord);

@@ -49,9 +49,9 @@ public class Answerretrieval {
             }
         }
 //      print all the property
-//        for (int i = 0;i<list.size();i++){
-//	    	System.out.println(list.get(i));
-//	    }
+        for (int i = 0;i<list.size();i++){
+	    	System.out.println(list.get(i));
+	    }
         return list;
 	}
 	
@@ -96,8 +96,8 @@ public class Answerretrieval {
 //			System.out.println(temp);
 //		}
 		//queryAnswer("\"劳尔·内托\"",propertyList.get(0));
-		queryAnswer("科比·布莱恩特","职业");
-//		getAllProperty("科比·布莱恩特");
+//		queryAnswer("科比·布莱恩特","职业");
+		getAllProperty("喜彩莲");
 	}
 
 }
