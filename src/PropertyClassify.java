@@ -27,9 +27,12 @@ public class PropertyClassify {
 	Set<String> DES = new HashSet<String>();
 	Set<String> Unknown = new HashSet<String>();
 	Set<String> total = new HashSet<String>();
+
 	Map<String, Set> map = new HashMap<String, Set>();
 	String[] option = {"_HUM","_LOC","_NUM","_TIME","_OBJ","_DES","_Unknown"};
 	
+	Set<String> fined = new HashSet<String>();
+
 	public PropertyClassify(){
 		map.put("_HUM", this.HUM);
 		map.put("_LOC", this.LOC);
@@ -107,5 +110,5 @@ public class PropertyClassify {
 			e.printStackTrace();
 		}
 	}
-
+	
 }
