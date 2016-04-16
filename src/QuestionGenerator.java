@@ -15,7 +15,7 @@ public class QuestionGenerator {
 	EntitySet es;
 	PropertyClassify pc;
 	public QuestionGenerator(){
-		es = new EntitySet("/Users/Lu/Desktop/544_project/sample_instances.owl");
+		es = new EntitySet("/Users/zhuqiliang/Dropbox/CS 544/Research Project/sample_instances.owl");
 		pc = new PropertyClassify();
 	}
 	

@@ -1,3 +1,7 @@
 .classpath
 *.class
 /bin/
+
+.idea/.name
+
+.idea/compiler.xml

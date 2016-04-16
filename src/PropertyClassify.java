@@ -14,7 +14,7 @@ public class PropertyClassify {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		PropertyClassify pc = new PropertyClassify();
-		pc.trainning("/Users/Lu/Desktop/properties.txt");
+		pc.trainning("/Users/zhuqiliang/Dropbox/CS 544/Research Project/properties.txt");
 	}
 	
 	
@@ -42,7 +42,7 @@ public class PropertyClassify {
 	}
 	
 	private void readCurrentModel(){
-		File file = new File("/Users/Lu/Desktop/NLP_Project/property_Classification.txt");
+		File file = new File("/Users/zhuqiliang/Dropbox/CS 544/Research Project/property_Classification.txt");
 		try {
 			Scanner data = new Scanner(file);
 			String key = "";
@@ -91,7 +91,7 @@ public class PropertyClassify {
 	}
 	
 	private void writeModel(){
-		File file = new File("/Users/Lu/Desktop/NLP_Project/property_Classification.txt");
+		File file = new File("/Users/zhuqiliang/Dropbox/CS 544/Research Project/property_Classification.txt");
 		try {
 			PrintWriter output = new PrintWriter(file);
 			for(int i = 0; i < this.option.length; i++){

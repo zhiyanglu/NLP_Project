@@ -26,7 +26,7 @@ public class Answerretrieval {
 		// TODO Auto-generated method stub
 		Model m = ModelFactory.createDefaultModel();
         // use the file manager to read an RDF document into the model
-        FileManager.get().readModel(m, "/Users/Lu/Desktop/544_project/sample_instances.owl");
+        FileManager.get().readModel(m, "/Users/zhuqiliang/Dropbox/CS 544/Research Project/sample_instances.owl");
         String sparqlQueryString = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
 				"PREFIX ckb: <http://cbk.org#>\n"+
 				"PREFIX ont: <http://ckb.org/ontology/#>\n"+
