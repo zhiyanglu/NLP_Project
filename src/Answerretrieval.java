@@ -97,7 +97,7 @@ public class Answerretrieval {
 //		}
 		//queryAnswer("\"劳尔·内托\"",propertyList.get(0));
 //		queryAnswer("科比·布莱恩特","职业");
-		getAllProperty("喜彩莲");
+		getAllProperty("李若彤");
 	}
 
 }

@@ -8,15 +8,16 @@ public class QuestionGenerator {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		QuestionGenerator qg = new QuestionGenerator();
-		qg.nextQuestion();
-		
+		System.out.println(qg.nextQuestion());
 	}
 	
 	EntitySet es;
 	PropertyClassify pc;
+	PropertyFineClassify pfc;
 	public QuestionGenerator(){
 		es = new EntitySet("/Users/zhuqiliang/Dropbox/CS 544/Research Project/sample_instances.owl");
 		pc = new PropertyClassify();
+		pfc = new PropertyFineClassify();
 	}
 	
 	public String nextQuestion(){
@@ -40,7 +41,6 @@ public class QuestionGenerator {
 			
 			notfind = false;
 			q = formQuestion(entity, prop);
-			System.out.println(q);
 		}		
 		return q;
 	}
@@ -54,48 +54,91 @@ public class QuestionGenerator {
 				break;
 			}
 		}
-		if(class_index == -1) return "";
+
+		String coarse_class = "_Unknown";
+		String fine_class = "_Unknown";
+		if(this.pfc.all_properties.contains(prop)){
+			coarse_class = this.pfc.coarse_class.get(prop);
+			fine_class = this.pfc.fine_class.get(prop);
+		}
 		
-		ArrayList<String> words = getQuestionForm(class_index);
-		
-		String s = "";
-		s = entity + "的" + prop + "是什么?";
-		
-		return s;
+		if(coarse_class.equals("_Unknown")){
+			String s = "";
+			s = entity + "的" + prop + "是什么?";
+			return s;
+		}else{
+			ArrayList<String> words = getQuestionForm(coarse_class, fine_class, entity, prop);
+			StringBuilder sb = new StringBuilder();
+			for(String word : words){
+				sb.append(word);
+			}
+			return sb.toString();
+		}		
 	}
 	
-	private ArrayList<String> getQuestionForm(int class_index){
+	private ArrayList<String> getQuestionForm(String coarse_class, String fine_class, String entity, String prop){
 		//ask about human
-		if(class_index == 0){
-			
+		Random ran = new Random();
+		ArrayList<String> parts = new ArrayList();
+		if(coarse_class.equals("_HUM")){
+			String[] question_word = {"是谁", "是哪个","叫什么","的名字是什么","叫什么名字","是哪个人"};
+			parts.add(entity);
+			parts.add("的");
+			parts.add(prop);
+			parts.add(question_word[ran.nextInt(question_word.length)]);
 		}
 		//ask about location
-		else if(class_index == 1){
-			
+		else if(coarse_class.equals("_LOC")){
+			String[] question_word = {"在哪里","在哪儿","在什么地方"};
+			parts.add(entity);
+			if(ran.nextBoolean()){
+				parts.add(question_word[ran.nextInt(question_word.length)]);
+			}else{
+				parts.add("的");
+				parts.add(prop);
+				parts.add(question_word[ran.nextInt(question_word.length)]);
+			}			
 		}
 		//ask about number
-		else if(class_index == 2){
-			
+		else if(coarse_class.equals("_NUM")){
+			String[] qw_dep = {"是多少","有多少"};
+			parts.add(entity);
+			parts.add("的");
+			parts.add(prop);
+			parts.add(qw_dep[ran.nextInt(qw_dep.length)]);
 		}
 		//ask about time
-		else if(class_index == 3){
-			
+		else if(coarse_class.equals("_TIME")){
+			String[] qw_dep = {"是什么时候","是什么时间"};
+			parts.add(entity);
+			parts.add("的");
+			parts.add(prop);
+			parts.add(qw_dep[ran.nextInt(qw_dep.length)]);			
 		}
 		//ask about object
-		else if(class_index == 4){
-			
+		else if(coarse_class.equals("_OBJ")){
+			parts.add(entity);
+			parts.add("的");
+			parts.add(prop);
+			parts.add("是什么");			
 		}
 		//ask about description
-		else if(class_index == 5){
-			
+		else if(coarse_class.equals("_DES")){
+			parts.add(entity);
+			parts.add("的");
+			parts.add(prop);
+			parts.add("是什么");						
 		}
 		//ask about unknown things
 		else{
-			
+			parts.add(entity);
+			parts.add("的");
+			parts.add(prop);
+			parts.add("是什么");			
 		}
 		
 		
-		return null;
+		return parts;
 	}
 
 }
