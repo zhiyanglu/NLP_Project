@@ -14,7 +14,7 @@ public class PropertyFineClassify {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		PropertyFineClassify pfc = new PropertyFineClassify();
-		pfc.trainFromUnclassfied();
+//		pfc.trainFromUnclassfied();
 	}
 
 	Set<String> all_properties = new HashSet<String>();
@@ -36,6 +36,8 @@ public class PropertyFineClassify {
 	String[] des_options = {"_ABBRV","_MEAN","_METHOD","_REASON","_DEF","_DES_OTHR"};
 	
 	Set<String> all_class = new HashSet();
+	
+	
 	public PropertyFineClassify(){
 		for(int i = 0; i < options.length; i++){
 			all_class.add(options[i]);
@@ -55,6 +57,9 @@ public class PropertyFineClassify {
 				all_properties.add(words[0]);
 				coarse_class.put(words[0], words[1]);
 				fine_class.put(words[0], words[2]);
+//				if(words[1].equals("_OBJ")){
+//					System.out.println(words[0] + " " + words[2]);
+//				}
 			}
 			data.close();
 		} catch (FileNotFoundException e){
@@ -160,6 +165,7 @@ public class PropertyFineClassify {
 	
 	private void writeModel(){
 		File file = new File("/Users/Lu/Desktop/NLP_Project/propty_class_two_level.txt");
+
 		try {
 			PrintWriter pw = new PrintWriter(file);
 			for(String prop : this.all_properties){
