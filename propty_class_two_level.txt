@@ -165,7 +165,7 @@ GDP _NUM _NUM_OTHR
 把兄弟 _HUM _HUM_DESC
 幕僚 _HUM _HUM_DESC
 创业伙伴 _HUM _HUM_DESC
-中文名 _HUM _HUM_DESC
+中文名 _DES _DES_OTHR
 瑶女郎 _HUM _HUM_DESC
 双人滑搭档 _HUM _HUM_DESC
 广东击剑中心教练 _HUM _HUM_DESC
@@ -847,7 +847,7 @@ NBA总裁 _HUM _HUM_DESC
 国王 _HUM _HUM_DESC
 身材 _NUM _NUM_OTHR
 快女3进2对手 _HUM _HUM_DESC
-英文名 _HUM _HUM_DESC
+英文名 _DES _DES_OTHR
 岳父 _HUM _HUM_DESC
 现绯闻女友 _HUM _HUM_DESC
 合作人 _HUM _HUM_DESC
@@ -892,7 +892,7 @@ Freeze组合同伴 _HUM _HUM_DESC
 太祖 _HUM _HUM_DESC
 远房堂弟 _HUM _HUM_DESC
 公益广告搭档 _HUM _HUM_DESC
-别名 _HUM _HUM_DESC
+别名 _DES _DES_OTHR
 文坛四丑将之一 _HUM _HUM_DESC
 前大儿媳 _HUM _HUM_DESC
 乐视网合伙人 _HUM _HUM_DESC
@@ -1964,7 +1964,7 @@ URL _DES _DES_OTHR
 国美前任集团主席 _HUM _HUM_DESC
 师兄妹 _HUM _HUM_DESC
 徒子徒孙 _HUM _HUM_DESC
-中文别称 _HUM _HUM_DESC
+中文别称 _DES _DES_OTHR
 湖人队的队友 _HUM _HUM_DESC
 双胞胎姐姐 _HUM _HUM_DESC
 儿子_老二 _HUM _HUM_DESC
