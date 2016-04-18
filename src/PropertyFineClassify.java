@@ -57,9 +57,9 @@ public class PropertyFineClassify {
 				all_properties.add(words[0]);
 				coarse_class.put(words[0], words[1]);
 				fine_class.put(words[0], words[2]);
-//				if(words[1].equals("_OBJ")){
-//					System.out.println(words[0] + " " + words[2]);
-//				}
+				if(words[1].equals("_TIME")){
+					System.out.println(words[0] + " " + words[2]);
+				}
 			}
 			data.close();
 		} catch (FileNotFoundException e){
