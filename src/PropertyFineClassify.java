@@ -46,7 +46,7 @@ public class PropertyFineClassify {
 	
 	
 	private void readFineModel(){
-		File file = new File("/Users/Lu/Desktop/NLP_Project/propty_class_two_level.txt");
+		File file = new File("/Users/zhuqiliang/GitHub/NLP_Project/propty_class_two_level.txt");
 		try {
 			Scanner data = new Scanner(file);
 			while(data.hasNext()){
@@ -55,6 +55,10 @@ public class PropertyFineClassify {
 				all_properties.add(words[0]);
 				coarse_class.put(words[0], words[1]);
 				fine_class.put(words[0], words[2]);
+
+				if(words[1].equals("_DES")){
+					System.out.println(words[0]);
+				}
 			}
 			data.close();
 		} catch (FileNotFoundException e){
@@ -63,7 +67,7 @@ public class PropertyFineClassify {
 	}
 	
 	public void trainFromClassfied(){
-		File file = new File("/Users/Lu/Desktop/NLP_Project/property_Classification.txt");
+		File file = new File("/Users/zhuqiliang/Dropbox/CS 544/Research Project/property_Classification.txt");
 		try {
 			Scanner data = new Scanner(file);
 			String key = "";
@@ -91,7 +95,7 @@ public class PropertyFineClassify {
 	}
 	
 	public void trainFromUnclassfied(){
-		File file = new File("/Users/Lu/Desktop/properties.txt");
+		File file = new File("/Users/zhuqiliang/Dropbox/CS 544/Research Project/properties.txt");
 		try {
 			Scanner data = new Scanner(file);
 			while(data.hasNext()){
@@ -159,7 +163,7 @@ public class PropertyFineClassify {
 	}
 	
 	private void writeModel(){
-		File file = new File("/Users/Lu/Desktop/NLP_Project/propty_class_two_level.txt");
+		File file = new File("/Users/zhuqiliang/GitHub/NLP_Project/propty_class_two_level.txt");
 		try {
 			PrintWriter pw = new PrintWriter(file);
 			for(String prop : this.all_properties){
