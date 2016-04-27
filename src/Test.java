@@ -1,5 +1,3 @@
-package src;
-
 import java.util.List;
 
 import com.hankcs.hanlp.HanLP;

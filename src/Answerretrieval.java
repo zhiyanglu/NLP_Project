@@ -1,5 +1,3 @@
-package src;
-
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -186,8 +184,7 @@ public class Answerretrieval {
 				"PREFIX ont: <http://ckb.org/ontology/#>\n"+
 				"SELECT ?people ?properties ?value\n"+
 				"WHERE\n"+
-//				"{?people rdfs:label \"劳尔·内托\". "+
-				"{?people rdfs:label" + key + ". "+
+				"{?people rdfs:label \"" + key + "\". "+
 				"?people ?properties ?value }" ;
         Query query = QueryFactory.create(sparqlQueryString) ;
         QueryExecution qexec = QueryExecutionFactory.create(query,m) ;
@@ -243,17 +240,17 @@ public class Answerretrieval {
 	}
 	
 	public static void main(String[] args) throws IOException{
-//		List<String> propertyList = new ArrayList<String>();
-//		propertyList = getAllProperty("\"劳尔·内托\"") ;
-//		for (String temp : propertyList){
-//			System.out.println(temp);
-//		}
+		List<String> propertyList = new ArrayList<String>();
+		propertyList = getAllProperty("劳尔·内托") ;
+		for (String temp : propertyList){
+			System.out.println(temp);
+		}
 //		queryAnswer("\"劳尔·内托\"",propertyList.get(0));
-		Map<String,String> QuestionParsing = Question("丁海有多高");
-		System.out.println("\""+QuestionParsing.get("class")+"\"");
-		List<String> AllProperty = getAllProperty("\""+QuestionParsing.get("class")+"\"");
-		String PropertyQuery = similarProperty(QuestionParsing.get("property"),AllProperty);
-		queryAnswer("\""+QuestionParsing.get("class")+"\"",PropertyQuery);
+//		Map<String,String> QuestionParsing = Question("丁海有多高");
+//		System.out.println("\""+QuestionParsing.get("class")+"\"");
+//		List<String> AllProperty = getAllProperty("\""+QuestionParsing.get("class")+"\"");
+//		String PropertyQuery = similarProperty(QuestionParsing.get("property"),AllProperty);
+//		queryAnswer("\""+QuestionParsing.get("class")+"\"",PropertyQuery);
 	}
 
 }
