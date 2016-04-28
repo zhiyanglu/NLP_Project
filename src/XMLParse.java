@@ -32,7 +32,7 @@ public class XMLParse {
 			
 			int idx = content.indexOf(operate);
 			
-			if (idx != -1 && content.indexOf(object2) == idx + Integer.parseInt(offset)) {
+			if (idx != -1 && content.indexOf(object2) == idx + Integer.parseInt(offset) + (operate.length() - 1)) {
 				return explain + "/";
 			}
 		}

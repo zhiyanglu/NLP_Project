@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -55,7 +56,7 @@ public class PropertyFineClassify {
 				all_properties.add(words[0]);
 				coarse_class.put(words[0], words[1]);
 				fine_class.put(words[0], words[2]);
-				if(words[1].equals("_TIME")){
+				if(words[1].equals("_OTR")){
 					System.out.println(words[0] + " " + words[2]);
 				}
 			}

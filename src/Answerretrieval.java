@@ -63,6 +63,7 @@ public class Answerretrieval {
 				System.out.println("choose again!");
 				index = input.nextInt();
 			}
+			input.close();
 			entity = possible_entities.get(index - 1);
 		}
 		
@@ -83,10 +84,17 @@ public class Answerretrieval {
 			property = all_properties.get(index -1);
 		}else{
 			
+			//get all parsed props
+			String[] props = tuple.get("property").split(",");
+			Set<String> prop_set = new HashSet<String>();
+			for(int i = 0; i < props.length; i++){
+				prop_set.add(props[i]);
+			}
+			
 			//all_properties contains exact the raw property
 			boolean notfind = true;
 			for(String p : all_properties){
-				if(p.equals(tuple.get("property"))){
+				if(prop_set.contains(p)){
 					property = p;
 					notfind = false;
 					break;
@@ -95,7 +103,7 @@ public class Answerretrieval {
 						
 			//get similar properties
 			if(notfind){
-				String synonym_property = getSimilarProperty(tuple.get("property"), all_properties);
+				String synonym_property = getSimilarProperty(prop_set, all_properties);
 				if(synonym_property.equals("")){
 					return "We cannot find " + tuple.get("property") + " of " + tuple.get("entity");
 				}else{
@@ -143,31 +151,38 @@ public class Answerretrieval {
 	    	if (term2str.get(i).substring(term2str.get(i).indexOf("/")+1,term2str.get(i).length()).equals("ns")){
 //	    		System.out.println(term2str.get(i).substring(0,term2str.get(i).indexOf("/") ));
 	    		entity = term2str.get(i);
+	    		break;
 	    	}
 //	    	check if the entity is a Chinese name, which tag is "nr"
 	    	if (term2str.get(i).substring(term2str.get(i).indexOf("/")+1,term2str.get(i).length()).equals("nr")){
 //	    		System.out.println(term2str.get(i).substring(0,term2str.get(i).indexOf("/") ));
 	    		entity = term2str.get(i);
+	    		break;
 	    	}
 //	    	check if the entity is a Foreign name, which tag is "nrf" or "nrj"
 	    	if (term2str.get(i).substring(term2str.get(i).indexOf("/")+1,term2str.get(i).length()).equals("nrf") || term2str.get(i).substring(term2str.get(i).indexOf("/")+1,term2str.get(i).length()).equals("nrj")){
 //	    		System.out.println(term2str.get(i).substring(0,term2str.get(i).indexOf("/") ));
 	    		entity = term2str.get(i);
+	    		break;
 	    	}
 //	    	check if the entity is a organization name, which tag is "nt"
 	    	if (term2str.get(i).substring(term2str.get(i).indexOf("/")+1,term2str.get(i).length()).equals("nt")){
 //	    		System.out.println(term2str.get(i).substring(0,term2str.get(i).indexOf("/") ));
 	    		entity = term2str.get(i);
+	    		break;
 	    	}
+	    }
+	    
+	 	for (int i=0; i<term2str.size(); i++){
 //	    	select the question word in the question sentence, which tag is "ry"
-	    	if (term2str.get(i).contains("ry")){
+	 			if (term2str.get(i).contains("ry")){
 //	    		System.out.println(term2str.get(i).substring(0,term2str.get(i).indexOf("/") ));
 	    		question = term2str.get(i);
 	    	}
 	    }
-//	    System.out.println(entity);
+	    System.out.println("entity: " + entity);
 	    Tuple.put("Entity", entity);
-//	    System.out.println(question);
+	    System.out.println("question: " + question);
 	    Tuple.put("QW", question);
 //	    find the center word by heuristic rule: finding the none closest to the entity,save in "center" variable
 	    String center = "";
@@ -175,7 +190,7 @@ public class Answerretrieval {
 //	    save all none words' index in the list<int>
 	    List<Integer> index_noun = new ArrayList<Integer>();
 	    for(int i=index_entity+1; i<term2str.size(); i++){
-	    	if(term2str.get(i).substring(term2str.get(i).length()-2,term2str.get(i).length()).equals("/n") || term2str.get(i).substring(term2str.get(i).length()-3,term2str.get(i).length()).equals("/nz") || term2str.get(i).substring(term2str.get(i).indexOf("/"),term2str.get(i).length()).equals("/nnt")){
+	    	if(term2str.get(i).substring(term2str.get(i).indexOf("/"),term2str.get(i).indexOf("/")+2).equals("/n") || term2str.get(i).substring(term2str.get(i).length()-3,term2str.get(i).length()).equals("/nz") || term2str.get(i).substring(term2str.get(i).indexOf("/"),term2str.get(i).length()).equals("/nnt")){
 	    		index_noun.add(i);
 	    	}
 	    }
@@ -202,23 +217,26 @@ public class Answerretrieval {
 	    	System.out.printf("%s : %s %n", entry.getKey(), entry.getValue());
 	    }
 //	    condition 1: (QW,CW,Entity), QT=CW 
-	    if(!Tuple.get("CW").equals("") && !Tuple.get("QW").equals("")){
+	     if(!Tuple.get("CW").equals("") && !Tuple.get("QW").equals("")){
 //	    	if center word and question word are "时候" and "什么", then looking for the verb in the sentence
 	    	if(Tuple.get("CW").substring(0, Tuple.get("CW").indexOf("/")).equals("时候") && Tuple.get("QW").substring(0, Tuple.get("QW").indexOf("/")).equals("什么")){
 //	    		looking for verb except for "有"，"是"
 	    		for (int i=0; i< term2str.size(); i++){
 	    			if (term2str.get(i).substring(term2str.get(i).indexOf("/")+1, term2str.get(i).length()).contains("v")){
 	    				if (!term2str.get(i).substring(term2str.get(i).indexOf("/")+1, term2str.get(i).length()).equals("vshi") && !term2str.get(i).substring(term2str.get(i).indexOf("/")+1, term2str.get(i).length()).equals("vyou")){
-	    					Tuple.put("CW",term2str.get(i));
+	    					Tuple.put("QT",term2str.get(i).substring(0, term2str.get(i).indexOf("/"))+"时间");
+//	    					System.out.println(Tuple.get("QT"));
 	    				}
 	    			}
 	    		}
 	    		
 	    	}
-	    	Tuple.put("QT", Tuple.get("CW"));
 //	    	handle question sentence "哪里人"
-	    	if(Tuple.get("CW").substring(0, Tuple.get("CW").indexOf("/")).equals("人") && Tuple.get("QW").substring(0, Tuple.get("QW").indexOf("/")).equals("哪里")){
-	    		Tuple.put("QT", "籍贯/");
+	    	else if(Tuple.get("CW").substring(0, Tuple.get("CW").indexOf("/")).equals("人") && Tuple.get("QW").substring(0, Tuple.get("QW").indexOf("/")).equals("哪里")){
+	    		Tuple.put("QT", "国籍,籍贯");
+	    	}
+	    	else{
+	    		Tuple.put("QT", Tuple.get("CW"));
 	    	}
 	    }
 //	    condition 2: (CW,Entity), QT=CW
@@ -228,7 +246,7 @@ public class Answerretrieval {
 //	    condition 3: (QW,Entity), QT= verb
 //	    QW == "哪"
 	    if(!Tuple.get("QW").equals("") && Tuple.get("CW").equals("")){
-//		    if(Tuple.get("QW").substring(0,Tuple.get("QW").indexOf("/")).contains("哪")){
+		    if(Tuple.get("QW").substring(0,Tuple.get("QW").indexOf("/")).contains("哪")){
 		    	for (int i=0; i< term2str.size(); i++){
 	    			if (term2str.get(i).substring(term2str.get(i).indexOf("/")+1, term2str.get(i).length()).contains("v")){
 	    				if (!term2str.get(i).substring(term2str.get(i).indexOf("/")+1, term2str.get(i).length()).equals("vshi") && !term2str.get(i).substring(term2str.get(i).indexOf("/")+1, term2str.get(i).length()).equals("vyou")){
@@ -238,7 +256,7 @@ public class Answerretrieval {
 	    				}
 	    			}
 	    		}	
-//		    }
+		    }
 	    }
 //	    condition 4: parsing can only get Entity, QT=rule-based
 	    if(Tuple.get("QW").equals("") && Tuple.get("CW").equals("")){
@@ -258,25 +276,38 @@ public class Answerretrieval {
 //	        System.out.println("Firstline is : " + text);
 //	        Tuple.put("QT", text);
 	    }
+	    //	    conditionPlus: after going through four conditions, we still cannot find QT, then go to rule again
+	    if(!Tuple.containsKey("QT")){
+	    	XMLParse parser = new XMLParse();
+	    	String explain = parser.parseRule(content);
+	    	if (explain == null) {
+	    		System.out.println("Error: no rule found");
+	    	}
+	    	
+	    	Tuple.put("QT", explain);
+	    }
 	    for(Map.Entry<String, String> entry : Tuple.entrySet()){ 
 	    	System.out.printf("%s : %s %n", entry.getKey(), entry.getValue());
 	    }
 //	    2-Tuple as(QT, Entity) for query QT is property, Entity is class
 	    Map<String,String> TupleQuery = new HashMap<>();
-	    if (Tuple.get("QT") != ""){
-	    	TupleQuery.put("property", Tuple.get("QT").substring(0, Tuple.get("QT").indexOf("/")));
+	    if (Tuple.get("QT") != "" && Tuple.get("QT") != null){
+	    	if (Tuple.get("QT").contains("/")){
+	    		TupleQuery.put("property", Tuple.get("QT").substring(0, Tuple.get("QT").indexOf("/")));
+	    	}
+	    	else{
+	    		TupleQuery.put("property", Tuple.get("QT"));
+	    		System.out.println(Tuple.get("QT"));
+	    	}
 	    }
 	    else{
-	    	TupleQuery.put("property","");
+	    	TupleQuery.put("property", "");
 	    }
 	    if (Tuple.get("Entity") != ""){
 	    	TupleQuery.put("entity", Tuple.get("Entity").substring(0, Tuple.get("Entity").indexOf("/")));
 	    }
 	    else{
-	    	TupleQuery.put("entity","");
-	    }
-	    for(Map.Entry<String, String> entry : TupleQuery.entrySet()){ 
-	    	System.out.printf("%s : %s %n", entry.getKey(), entry.getValue());
+	    	TupleQuery.put("entity", "");
 	    }
 //	    if hanlp cannot find entity, use fnlp
 	    if(TupleQuery.get("entity").equals("")){
@@ -285,6 +316,11 @@ public class Answerretrieval {
 	    		TupleQuery.put("entity", e.substring(1, e.indexOf("=")));
 	    	}
 	    }
+	    if (TupleQuery.get("property").equals("像")){
+	    	TupleQuery.put("property","酷似");
+	    }
+	    
+	    System.out.println(TupleQuery);
 	    return TupleQuery;
 	}
 	
@@ -368,11 +404,14 @@ public class Answerretrieval {
 	 * @param prop
 	 * @return
 	 */
-	public String getSimilarProperty(String prop, ArrayList<String> all_properties){
+	public String getSimilarProperty(Set<String> props, ArrayList<String> all_properties){
 		String word = "";
 		SynonymsDict SD = new SynonymsDict();
-		ArrayList<String> synos = SD.getRangeSynonyms(prop, false);
-		
+		ArrayList<String> synos = new ArrayList<String>();
+		for(String prop : props){
+			ArrayList<String> list = SD.getSynonyms(prop, true);
+			for(int i = 0; i < list.size(); i++) synos.add(list.get(i));
+		}
 		Set<String> all_props = new HashSet<String>(all_properties);
 		for(String syn : synos){
 			if(all_props.contains(syn)){
@@ -445,8 +484,8 @@ public class Answerretrieval {
 //		String q = qg.nextQuestion();
 
 		Answerretrieval ar = new Answerretrieval();
-		System.out.println(ar.ask("姚明的爷爷是谁"));
-//		System.out.println(ar.parseQuestion(q));
+		System.out.println(ar.ask("姚明是哪里人"));
+//		System.out.println(ar.parseQuestion("姚明是哪里人"));
 	}
 
 }
