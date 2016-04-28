@@ -13,7 +13,7 @@ public class SynonymsDict {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 //		SynonymsDict sd = new SynonymsDict();
-//		ArrayList<String> list = sd.getSynonyms("性别", false);
+//		ArrayList<String> list = sd.getRangeSynonyms("出生地", false);
 //		System.out.println(list);
 		test();
 
@@ -27,7 +27,7 @@ public class SynonymsDict {
 			String line = props.nextLine();
 			String words[] = line.split("\\s+");
 			String word = words[0];
-			ArrayList<String> list = sd.getRangeSynonyms(word, true);
+			ArrayList<String> list = sd.getRangeSynonyms(word, false);
 			if(list.size() == 0) count++;
 			System.out.println(word + ":\t" + list);
 		}
@@ -50,9 +50,9 @@ public class SynonymsDict {
 		this.code_level5 = new HashMap();
 		
 		try {
-			System.out.println("Reading model...");
+//			System.out.println("Reading model...");
 			readModel();
-			System.out.println("Finished");
+//			System.out.println("Finished");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,7 +108,7 @@ public class SynonymsDict {
 		if(!this.word_codes.containsKey(word)) return res;
 		
 		for(String code : this.word_codes.get(word)){
-			if(findSameClass && this.code_flag.get(code) != '=') continue;
+			if(findSameClass && this.code_flag.get(code) == '#') continue;
 			ArrayList<String> list = this.code_words.get(code);
 			for(String syno_word : list) res.add(syno_word);
 		}
@@ -124,7 +124,7 @@ public class SynonymsDict {
 		}
 		
 		for(String code : codes){
-			if(findSameClass && this.code_flag.get(code) != '=') continue;
+			if(findSameClass && this.code_flag.get(code) == '#') continue;
 			ArrayList<String> list = this.code_words.get(code);
 			for(String syno_word : list) res.add(syno_word);			
 		}

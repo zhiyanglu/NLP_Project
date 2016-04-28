@@ -1,20 +1,32 @@
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class QuestionGenerator implements Runnable {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		QuestionGenerator qg = new QuestionGenerator();
-		System.out.println(qg.nextQuestion());
-//		new Thread(qg, "A").start();
-//		new Thread(qg, "B").start();
-//		new Thread(qg, "C").start();
-//		new Thread(qg, "D").start();
-//		new Thread(qg, "E").start();
+		
+		File file = new File("/Users/Lu/Desktop/question_set"+Thread.currentThread().getName()+".txt");
+		try {
+			PrintWriter pw = new PrintWriter(file);
+			for(int i = 0; i < 10; i++){
+				ArrayList<String> list = qg.getQuestionForAll();
+				for(String q : list){
+					pw.println(q);
+				}				
+			}
+			pw.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return;
 	}
@@ -22,10 +34,12 @@ public class QuestionGenerator implements Runnable {
 	EntitySet es;
 	PropertyClassify pc;
 	PropertyFineClassify pfc;
+	Answerretrieval ar;
 	public QuestionGenerator(){
 		es = new EntitySet("/Users/Lu/Desktop/544_project/sample_instances.owl");
 		pc = new PropertyClassify();
 		pfc = new PropertyFineClassify();
+		ar = new Answerretrieval();
 	}
 	
 	public String nextQuestion(){
@@ -35,7 +49,7 @@ public class QuestionGenerator implements Runnable {
 		
 		while(notfind){
 			String entity = es.getRandomEntity();
-			ArrayList<String> properties = Answerretrieval.getAllProperty(entity);
+			ArrayList<String> properties = (ArrayList<String>) ar.getAllProperties(entity);
 
 //			System.out.println(entity);
 //			for(int i = 0; i < properties.size(); i++){
@@ -48,13 +62,49 @@ public class QuestionGenerator implements Runnable {
 			}
 			
 			notfind = false;
-			q = formQuestion(entity, prop);
-		}		
+			ArrayList<String> pool = formQuestion(entity, prop);
+			q = pool.get(ran.nextInt(pool.size()));
+		}
 		return q;
 	}
 	
+	public ArrayList<String> getQuestionForAll(){
+		ArrayList<String> res = new ArrayList<String>();
+
+		boolean notfind = true;
+		
+		while(notfind){
+			String entity = es.getRandomEntity();
+			ArrayList<String> properties = (ArrayList<String>) ar.getAllProperties(entity);
+			Set<String> selected = new HashSet<String>();
+
+			for(int i = 0; i < properties.size(); i++){
+				String prop = properties.get(i);
+				if(!prop.equals("label") && ! prop.equals("subClassOf") && !selected.contains(prop)){
+					selected.add(prop);
+				}
+			}			
+			
+			if(selected.size() == 0){
+				continue;
+			}
+			
+			notfind = false;
+			res.add(entity);
+			for(String prop : selected){
+				ArrayList<String> pool = formQuestion(entity, prop);
+//				res.add(prop);
+				for(int j = 0; j < pool.size(); j++){
+					res.add(pool.get(j));
+				}				
+			}
+			res.add("--end--");
+		}
+		
+		return res;
+	}
 	
-	public String formQuestion(String entity, String prop){
+	public ArrayList<String> formQuestion(String entity, String prop){
 		int class_index = -1;
 		for(int i = 0; i < pc.option.length; i++){
 			if(pc.map.get(pc.option[i]).contains(prop)){
@@ -62,6 +112,8 @@ public class QuestionGenerator implements Runnable {
 				break;
 			}
 		}
+		
+		ArrayList<String> res = new ArrayList();
 
 		String coarse_class = "_Unknown";
 		String fine_class = "_Unknown";
@@ -73,22 +125,22 @@ public class QuestionGenerator implements Runnable {
 		if(coarse_class.equals("_Unknown")){
 			String s = "";
 			s = entity + "的" + prop + "是什么?";
-			return s;
+			res.add(s);
+			return res;
 		}else{
-		    String s = getQuestionForm(coarse_class, fine_class, entity, prop);
-		    if(s.length() == 0 || s == null) return entity + "的" + prop + "是什么?";
-		    else return s;
+		    ArrayList<String> s = getQuestionForm(coarse_class, fine_class, entity, prop);
+		    return s;
 		}		
 	}
 	
-	private String getQuestionForm(String coarse_class, String fine_class, String entity, String prop){
+	private ArrayList<String> getQuestionForm(String coarse_class, String fine_class, String entity, String prop){
 		Random ran = new Random();
 		StringBuilder sb = new StringBuilder();
+		ArrayList<String> pool = new ArrayList();
 
 		
 		//ask about human
 		if(coarse_class.equals("_HUM")){
-			ArrayList<String> pool = new ArrayList();
 			if(fine_class.equals("_HUM_ENUM")){
 				pool.add(entity + "的" + prop + "有哪些人");
 				pool.add(entity + "的" + prop + "都有哪些人");
@@ -98,17 +150,18 @@ public class QuestionGenerator implements Runnable {
 				pool.add("有哪些人是" + entity + "的" + prop);
 				pool.add("有谁是" + entity + "的" + prop);
 			}else if(fine_class.equals("_HUM_DESC")){
-				pool.add(entity + "的" + prop + "是谁");
-				pool.add(entity + "的" + prop + "是哪个");
-				pool.add(entity + "的" + prop + "是哪个人");
-				pool.add(entity + "的" + prop + "是哪一个");
-				pool.add(entity + "的" + prop + "叫什么");
-				pool.add(entity + "的" + prop + "的名字是什么");
-				pool.add(entity + "的" + prop + "叫什么名字");
+				String de = prop.indexOf("其") == -1 ? "的" : "";
+				pool.add(entity + de + prop + "是谁");
+				pool.add(entity + de + prop + "是哪个");
+				pool.add(entity + de + prop + "是哪个人");
+				pool.add(entity + de + prop + "是哪一个");
+				pool.add(entity + de + prop + "叫什么");
+				pool.add(entity + de + prop + "的名字是什么");
+				pool.add(entity + de + prop + "叫什么名字");
 				
-				pool.add("谁是" + entity + "的" + prop);
-				pool.add("哪个人是" + entity + "的" + prop);
-				pool.add("哪个是" + entity + "的" + prop);
+				pool.add("谁是" + entity + de + prop);
+				pool.add("哪个人是" + entity + de + prop);
+				pool.add("哪个是" + entity + de + prop);
 			}else{
 				pool.add(entity + "的" + prop + "是谁");
 			}
@@ -116,7 +169,6 @@ public class QuestionGenerator implements Runnable {
 		}
 		//ask about location
 		else if(coarse_class.equals("_LOC")){
-			ArrayList<String> pool = new ArrayList();
 			if(fine_class.equals("_LOC_ENUM")){				
 				pool.add(entity + "的" + prop + "有哪些地方");
 				pool.add(entity + "的" + prop + "有哪些");
@@ -151,8 +203,10 @@ public class QuestionGenerator implements Runnable {
 					pool.add(entity + "的" + prop + "是哪儿");
 					pool.add(entity + "的" + prop + "是哪个国家");
 					pool.add(entity + "是哪个国家的");
-					pool.add(entity + "在哪里");
-					pool.add(entity + "在哪儿");
+					if(!prop.equals("国籍")){
+						pool.add(entity + "在哪里");
+						pool.add(entity + "在哪儿");						
+					}
 				}
 				if(fine_class.equals("_LOC_OTHR")){
 					pool.add(entity + "的" + prop + "在哪儿");
@@ -166,7 +220,6 @@ public class QuestionGenerator implements Runnable {
 		//ask about number
 		else if(coarse_class.equals("_NUM")){
 			//general
-			ArrayList<String> pool = new ArrayList();
 			if(fine_class.equals("_QUANTITY")){
 				pool.add(entity + "的" + prop + "有多少");
 				pool.add(entity + "的" + prop + "是多少");
@@ -205,31 +258,21 @@ public class QuestionGenerator implements Runnable {
 		}
 		//ask about time
 		else if(coarse_class.equals("_TIME")){
-			String[] qw_dep = {"什么时候","什么时间"};
 			if (ran.nextBoolean() || prop.indexOf("所处时代") != -1) {
-				sb.append(entity);
-				sb.append("的");
-				sb.append(prop);
-				sb.append("是");
-				sb.append(qw_dep[ran.nextInt(qw_dep.length)]);
+				pool.add(entity + "的" + prop + "是什么时候");
+				pool.add(entity + "的" + prop + "是什么时间");
 			} else {
 				if (prop.indexOf("时间") != -1 || prop.indexOf("年月") != -1) {
 					String verb = prop.substring(0, 2);
-					sb.append(entity);
-					sb.append("是");
-					sb.append(qw_dep[ran.nextInt(qw_dep.length)]);
-					sb.append(verb);
+					pool.add(entity + "是什么时候" + verb);
+					pool.add(entity + "是什么时间" + verb);
 				} else if (prop.indexOf("片长") != -1) {
-					sb.append(entity);
-					sb.append("的");
-					sb.append(prop);
-					sb.append("有多久");
+					pool.add(entity + "的" + prop + "有多久");
 				}
 			}
 		}
 		//ask about object
 		else if(coarse_class.equals("_OBJ")){
-			ArrayList<String> pool = new ArrayList();
 			if(fine_class.equals("_OBJ_ENUM")){
 				pool.add(entity + "的" + prop + "有什么");
 				pool.add(entity + "的" + prop + "有哪些");
@@ -244,14 +287,13 @@ public class QuestionGenerator implements Runnable {
 		}
 		//ask about description
 		else if(coarse_class.equals("_DES")){
-			ArrayList<String> pool = new ArrayList();
 			if(prop.equals("目") || prop.equals("界") || prop.equals("科") || prop.equals("纲") || prop.equals("门")){
 				pool.add(entity + "是什么" + prop);
 				pool.add(entity + "是哪个" + prop);
 				pool.add(entity + "属于什么" + prop);
 				pool.add(entity + "属于哪个" + prop);
 			}else{
-				if(!prop.equals("简介") && !prop.equals("ABSTRACT")){
+				if(!prop.equals("简介") && !prop.equals("ABSTRACT") && !prop.equals("URL")){
 					pool.add(entity + "是什么" + prop);
 				}
 				if(prop.equals("简介") || prop.equals("ABSTRACT") || prop.equals("URL")){
@@ -267,13 +309,12 @@ public class QuestionGenerator implements Runnable {
 					pool.add(entity + "是哪个" + prop);
 				}
 			}
-			sb.append(pool.get(ran.nextInt(pool.size())));
 		}
 		//ask about unknown things
 		else{
-			sb.append(entity + "的" + prop + "是什么");			
+			pool.add(entity + "的" + prop + "是什么");
 		}
-		return sb.toString();
+		return pool;
 	}
 
 	@Override
