@@ -9,27 +9,27 @@ import java.util.Set;
 
 public class QuestionGenerator implements Runnable {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		QuestionGenerator qg = new QuestionGenerator();
-		
-		File file = new File("/Users/Lu/Desktop/question_set"+Thread.currentThread().getName()+".txt");
-		try {
-			PrintWriter pw = new PrintWriter(file);
-			for(int i = 0; i < 10; i++){
-				ArrayList<String> list = qg.getQuestionForAll();
-				for(String q : list){
-					pw.println(q);
-				}				
-			}
-			pw.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return;
-	}
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		QuestionGenerator qg = new QuestionGenerator();
+//		
+//		File file = new File("/Users/Lu/Desktop/question_set"+Thread.currentThread().getName()+".txt");
+//		try {
+//			PrintWriter pw = new PrintWriter(file);
+//			for(int i = 0; i < 10; i++){
+//				ArrayList<String> list = qg.getQuestionForAll();
+//				for(String q : list){
+//					pw.println(q);
+//				}				
+//			}
+//			pw.close();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		return;
+//	}
 	
 	EntitySet es;
 	PropertyClassify pc;

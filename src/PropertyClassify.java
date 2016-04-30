@@ -10,11 +10,11 @@ import java.util.Set;
 
 public class PropertyClassify {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		PropertyClassify pc = new PropertyClassify();
-		pc.trainning("/Users/Lu/Desktop/properties.txt");
-	}
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		PropertyClassify pc = new PropertyClassify();
+//		pc.trainning("/Users/Lu/Desktop/properties.txt");
+//	}
 	
 	
 	

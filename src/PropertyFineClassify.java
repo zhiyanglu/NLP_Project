@@ -10,11 +10,11 @@ import java.util.Set;
 
 public class PropertyFineClassify {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		PropertyFineClassify pfc = new PropertyFineClassify();
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		PropertyFineClassify pfc = new PropertyFineClassify();
 //		pfc.trainFromUnclassfied();
-	}
+//	}
 
 	Set<String> all_properties = new HashSet<String>();
 	Map<String, String> coarse_class = new HashMap();

@@ -10,14 +10,6 @@ import java.util.Set;
 
 public class SynonymsDict {
 
-	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-//		SynonymsDict sd = new SynonymsDict();
-//		ArrayList<String> list = sd.getRangeSynonyms("出生地", false);
-//		System.out.println(list);
-		test();
-
-	}
 	public static void test() throws FileNotFoundException{
 		SynonymsDict sd = new SynonymsDict();
 		int count = 0;
@@ -31,10 +23,9 @@ public class SynonymsDict {
 			if(list.size() == 0) count++;
 			System.out.println(word + ":\t" + list);
 		}
-		
 		System.out.println("cannot find synonyms: " + count);
-
 	}
+	
 
 	final static String dict_path = "/Users/Lu/Desktop/544_project/synonyms_dict_utf8.txt";
 
