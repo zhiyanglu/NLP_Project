@@ -1,4 +1,3 @@
-package src;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,11 +10,11 @@ import java.util.Set;
 
 public class PropertyFineClassify {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		PropertyFineClassify pfc = new PropertyFineClassify();
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		PropertyFineClassify pfc = new PropertyFineClassify();
 //		pfc.trainFromUnclassfied();
-	}
+//	}
 
 	Set<String> all_properties = new HashSet<String>();
 	Map<String, String> coarse_class = new HashMap();
@@ -57,7 +56,7 @@ public class PropertyFineClassify {
 				all_properties.add(words[0]);
 				coarse_class.put(words[0], words[1]);
 				fine_class.put(words[0], words[2]);
-				if(words[1].equals("_TIME")){
+				if(words[1].equals("_OTR")){
 					System.out.println(words[0] + " " + words[2]);
 				}
 			}
